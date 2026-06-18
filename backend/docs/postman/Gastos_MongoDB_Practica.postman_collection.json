@@ -1,0 +1,291 @@
+{
+  "info": {
+    "name": "Práctica Express.js + MongoDB - Gastos",
+    "description": "Colección para probar el backend de gastos y usuarios con MongoDB.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "General",
+      "item": [
+        {
+          "name": "Inicio - /misitio",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/misitio",
+              "host": ["{{baseUrl}}"],
+              "path": ["misitio"]
+            }
+          }
+        },
+        {
+          "name": "About - /misitio/about",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/misitio/about",
+              "host": ["{{baseUrl}}"],
+              "path": ["misitio", "about"]
+            }
+          }
+        },
+        {
+          "name": "Contactos - /misitio/contactos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/misitio/contactos",
+              "host": ["{{baseUrl}}"],
+              "path": ["misitio", "contactos"]
+            }
+          }
+        },
+        {
+          "name": "Health - servidor activo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/misitio/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["misitio", "health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Gastos",
+      "item": [
+        {
+          "name": "Listar gastos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/misitio/gastos",
+              "host": ["{{baseUrl}}"],
+              "path": ["misitio", "gastos"]
+            }
+          }
+        },
+        {
+          "name": "Listar gastos por cédula",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/misitio/gastos?cedula=1800000001",
+              "host": ["{{baseUrl}}"],
+              "path": ["misitio", "gastos"],
+              "query": [
+                {
+                  "key": "cedula",
+                  "value": "1800000001"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Agregar gasto",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.data && json.data._id) {",
+                  "  pm.environment.set('gastoId', json.data._id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cedula\": \"1800000001\",\n  \"tipo\": \"salud\",\n  \"monto\": 320,\n  \"montoMaximoDeducible\": 14575.60,\n  \"informacion\": \"Consulta médica y compra de medicinas\",\n  \"periodo\": 2025\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/misitio/gastos",
+              "host": ["{{baseUrl}}"],
+              "path": ["misitio", "gastos"]
+            }
+          }
+        },
+        {
+          "name": "Actualizar gasto",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"monto\": 450,\n  \"informacion\": \"Gasto actualizado desde Postman\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/misitio/gastos/{{gastoId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["misitio", "gastos", "{{gastoId}}"]
+            }
+          }
+        },
+        {
+          "name": "Eliminar gasto",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/misitio/gastos/{{gastoId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["misitio", "gastos", "{{gastoId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Usuarios",
+      "item": [
+        {
+          "name": "Listar usuarios",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/misitio/usuarios",
+              "host": ["{{baseUrl}}"],
+              "path": ["misitio", "usuarios"]
+            }
+          }
+        },
+        {
+          "name": "Agregar usuario",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.data && json.data._id) {",
+                  "  pm.environment.set('usuarioId', json.data._id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Maria Lopez\",\n  \"cedula\": \"1800000001\",\n  \"email\": \"mlopez@gmail.com\",\n  \"periodo\": 2025,\n  \"gastos\": [\n    { \"salud\": 320 },\n    { \"educacion\": 1320 },\n    { \"vivienda\": 320 }\n  ],\n  \"ingresos\": 25000\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/misitio/usuarios",
+              "host": ["{{baseUrl}}"],
+              "path": ["misitio", "usuarios"]
+            }
+          }
+        },
+        {
+          "name": "Agregar usuario 2",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.data && json.data._id) {",
+                  "  pm.environment.set('usuarioId', json.data._id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Carlos Vega\",\n  \"cedula\": \"1800000002\",\n  \"email\": \"cvega@gmail.com\",\n  \"periodo\": 2025,\n  \"gastos\": [\n    { \"salud\": 1320 },\n    { \"educacion\": 5320 },\n    { \"vivienda\": 3320 }\n  ],\n  \"ingresos\": 33000\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/misitio/usuarios",
+              "host": ["{{baseUrl}}"],
+              "path": ["misitio", "usuarios"]
+            }
+          }
+        },
+        {
+          "name": "Actualizar usuario",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ingresos\": 28000,\n  \"gastos\": [\n    { \"tipo\": \"salud\", \"monto\": 500 },\n    { \"tipo\": \"educacion\", \"monto\": 1500 },\n    { \"tipo\": \"vivienda\", \"monto\": 700 }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/misitio/usuarios/{{usuarioId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["misitio", "usuarios", "{{usuarioId}}"]
+            }
+          }
+        },
+        {
+          "name": "Eliminar usuario",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/misitio/usuarios/{{usuarioId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["misitio", "usuarios", "{{usuarioId}}"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    }
+  ]
+}

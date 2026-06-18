@@ -1,0 +1,31 @@
+{
+  "name": "gastos-mongodb-practica",
+  "version": "1.0.0",
+  "description": "Práctica de Express.js con MongoDB para usuarios y gastos",
+  "main": "servidor.js",
+  "scripts": {
+    "start": "node servidor.js",
+    "dev": "nodemon servidor.js",
+    "seed": "node src/seed/seed.js"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "mongodb",
+    "mongoose",
+    "postman",
+    "gastos"
+  ],
+  "author": "Alejandro Ojeda",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.9.5",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
