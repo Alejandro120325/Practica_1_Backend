@@ -1,18 +1,25 @@
-﻿import axios from "axios";
+import axios from "axios";
 
-const API_URL =
-    import.meta.env.MODE === "aws"
-        ? "http://18.191.247.48:3000"
-        : import.meta.env.VITE_API_URL || "http://localhost:3000";
+const mode = import.meta.env.MODE;
+const configuredUrl = import.meta.env.VITE_API_URL?.trim();
 
-console.log("MODO VITE:", import.meta.env.MODE);
-console.log("API_URL usada por el frontend:", API_URL);
+export const API_URL = configuredUrl || (mode === "aws" ? "http://18.191.247.48:3000" : "http://localhost:3000");
+
+const normalizedUrl = API_URL.toLowerCase();
+const isLocalUrl = normalizedUrl.includes("localhost") || normalizedUrl.includes("127.0.0.1");
+
+export const connectionInfo = {
+  mode,
+  apiUrl: API_URL,
+  isAws: mode === "aws" || !isLocalUrl,
+};
 
 export const api = axios.create({
   baseURL: API_URL,
   headers: {
     "Content-Type": "application/json",
   },
+  timeout: 12000,
 });
 
 export const endpoints = {
