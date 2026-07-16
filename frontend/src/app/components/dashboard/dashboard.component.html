@@ -1,0 +1,96 @@
+<div class="view-stack">
+  <section class="section-heading">
+    <div>
+      <span class="section-kicker">Vista general</span>
+      <h2>Resumen del sistema</h2>
+    </div>
+    <p>Datos obtenidos con Angular HttpClient desde la API REST.</p>
+  </section>
+
+  <div class="alert-error" *ngIf="error">{{ error }}</div>
+
+  <section class="stats-grid" aria-label="Indicadores del dashboard">
+    <article class="stat-card">
+      <span class="stat-icon blue">▤</span>
+      <div>
+        <span>Total de gastos</span>
+        <strong>{{ loading ? '—' : totalGastos }}</strong>
+        <small>Registros desde GET /misitio/gastos</small>
+      </div>
+    </article>
+    <article class="stat-card">
+      <span class="stat-icon cyan">👥</span>
+      <div>
+        <span>Total de usuarios</span>
+        <strong>{{ loading ? '—' : totalUsuarios }}</strong>
+        <small>Registros desde GET /misitio/usuarios</small>
+      </div>
+    </article>
+    <article class="stat-card">
+      <span class="stat-icon green">$</span>
+      <div>
+        <span>Monto total registrado</span>
+        <strong>{{ loading ? '—' : (montoTotal | currency: 'USD') }}</strong>
+        <small>Suma de gastos registrados</small>
+      </div>
+    </article>
+    <article class="stat-card">
+      <span class="stat-icon violet">☁</span>
+      <div>
+        <span>Entorno activo</span>
+        <strong>{{ environmentName }}</strong>
+        <small>{{ connectionLabel }}</small>
+      </div>
+    </article>
+    <article class="stat-card">
+      <span class="stat-icon" [class.green]="backendOnline !== false" [class.red]="backendOnline === false">●</span>
+      <div>
+        <span>Estado del backend</span>
+        <strong>{{ estadoBackend }}</strong>
+        <small>{{ backendMessage }}</small>
+      </div>
+    </article>
+    <article class="stat-card">
+      <span class="stat-icon blue">DB</span>
+      <div>
+        <span>Base de datos</span>
+        <strong>MongoDB Atlas</strong>
+        <small>Persistencia en la nube</small>
+      </div>
+    </article>
+  </section>
+
+  <section class="overview-grid">
+    <article class="panel">
+      <div class="panel-heading">
+        <span class="panel-icon">A</span>
+        <div>
+          <span class="section-kicker">Angular</span>
+          <h3>SPA con Routing y HttpClient</h3>
+        </div>
+      </div>
+      <p class="panel-copy">
+        Esta versión usa RouterModule para navegación interna, FormsModule con ngModel para formularios y
+        HttpClient para consumir endpoints REST del backend AWS.
+      </p>
+      <div class="stack-list">
+        <div><span>Frontend</span><strong>Angular</strong></div>
+        <div><span>Routing</span><strong>RouterModule</strong></div>
+        <div><span>Formularios</span><strong>FormsModule + ngModel</strong></div>
+        <div><span>HTTP</span><strong>HttpClient</strong></div>
+      </div>
+    </article>
+
+    <article class="panel flow-panel">
+      <span class="section-kicker">Integración</span>
+      <h3>API REST centralizada</h3>
+      <p>
+        Postman, Angular y cualquier cliente HTTP consumen el mismo backend desplegado en AWS EC2. Los datos se
+        guardan en MongoDB Atlas y se reflejan al actualizar la interfaz.
+      </p>
+      <div class="flow-tags">
+        <span>Angular</span><b>→</b><span>HttpClient</span><b>→</b><span>API AWS</span><b>→</b><span>MongoDB Atlas</span>
+      </div>
+    </article>
+  </section>
+</div>

@@ -1,0 +1,224 @@
+<div class="view-stack">
+  <section class="section-heading">
+    <div>
+      <span class="section-kicker">PW2.11 HttpClient</span>
+      <h2>Reporte de Gestión de Gastos</h2>
+    </div>
+    <button class="button button-primary" type="button" (click)="cargarReporte()" [disabled]="loadingApi">
+      {{ loadingApi ? 'Actualizando...' : 'Actualizar reporte' }}
+    </button>
+  </section>
+
+  <section class="report-evidence panel">
+    <span class="panel-icon">HTTP</span>
+    <div>
+      <span class="section-kicker">Angular HttpClient</span>
+      <h3>Consumo de datos desde diferentes fuentes</h3>
+      <p>
+        Esta sección demuestra el uso de Angular HttpClient para consultar datos desde diferentes fuentes:
+        API REST AWS, un archivo JSON local y usuarios externos desde JSONPlaceholder.
+      </p>
+    </div>
+  </section>
+
+  <div class="alert-error" *ngIf="error">{{ error }}</div>
+
+  <section class="stats-grid">
+    <article class="stat-card">
+      <span class="stat-icon blue">▤</span>
+      <div>
+        <span>Total de gastos</span>
+        <strong>{{ loadingApi ? '—' : gastosApi.length }}</strong>
+        <small>API REST AWS</small>
+      </div>
+    </article>
+    <article class="stat-card">
+      <span class="stat-icon cyan">👥</span>
+      <div>
+        <span>Total de usuarios</span>
+        <strong>{{ loadingApi ? '—' : usuariosApi.length }}</strong>
+        <small>API REST AWS</small>
+      </div>
+    </article>
+    <article class="stat-card">
+      <span class="stat-icon green">$</span>
+      <div>
+        <span>Monto total registrado</span>
+        <strong>{{ loadingApi ? '—' : (montoTotal | currency: 'USD') }}</strong>
+        <small>Suma desde API</small>
+      </div>
+    </article>
+    <article class="stat-card">
+      <span class="stat-icon violet">☁</span>
+      <div>
+        <span>Entorno activo</span>
+        <strong>{{ environmentName }}</strong>
+        <small>Backend AWS EC2 + MongoDB Atlas</small>
+      </div>
+    </article>
+  </section>
+
+  <section class="report-grid">
+    <div class="report-source-heading">
+      <span class="section-kicker">Fuente 01</span>
+      <h3>Reporte desde API REST AWS</h3>
+      <p>Gastos y usuarios consultados desde los endpoints REST del backend.</p>
+    </div>
+
+    <div class="table-card">
+      <div class="table-heading">
+        <div>
+          <h3>Gastos desde API AWS</h3>
+          <p>{{ loadingApi ? 'Cargando datos...' : gastosApi.length + ' registros consultados' }}</p>
+        </div>
+        <span class="count-badge">{{ gastosApi.length }}</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Cédula</th>
+              <th>Tipo</th>
+              <th>Monto</th>
+              <th>Máximo deducible</th>
+              <th>Información</th>
+              <th>Periodo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let gasto of gastosApi">
+              <td class="cell-primary">{{ gasto.cedula }}</td>
+              <td><span class="type-badge" [ngClass]="'type-' + gasto.tipo">{{ getTipoLabel(gasto.tipo) }}</span></td>
+              <td class="money-cell">{{ gasto.monto | currency: 'USD' }}</td>
+              <td>{{ gasto.montoMaximoDeducible | currency: 'USD' }}</td>
+              <td class="info-cell">{{ gasto.informacion || '—' }}</td>
+              <td>{{ gasto.periodo || '—' }}</td>
+            </tr>
+            <tr *ngIf="loadingApi">
+              <td class="empty-cell" colspan="6">Cargando datos...</td>
+            </tr>
+            <tr *ngIf="!loadingApi && gastosApi.length === 0">
+              <td class="empty-cell" colspan="6">No hay gastos disponibles desde la API.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-heading">
+        <div>
+          <h3>Usuarios desde API AWS</h3>
+          <p>{{ loadingApi ? 'Cargando datos...' : usuariosApi.length + ' registros consultados' }}</p>
+        </div>
+        <span class="count-badge">{{ usuariosApi.length }}</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Cédula</th>
+              <th>Email</th>
+              <th>Periodo</th>
+              <th>Ingresos</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let usuario of usuariosApi">
+              <td class="cell-primary">{{ usuario.nombre }}</td>
+              <td>{{ usuario.cedula }}</td>
+              <td><a class="email-link" [href]="'mailto:' + usuario.email">{{ usuario.email }}</a></td>
+              <td>{{ usuario.periodo || '—' }}</td>
+              <td class="money-cell">{{ usuario.ingresos | currency: 'USD' }}</td>
+            </tr>
+            <tr *ngIf="loadingApi">
+              <td class="empty-cell" colspan="5">Cargando datos...</td>
+            </tr>
+            <tr *ngIf="!loadingApi && usuariosApi.length === 0">
+              <td class="empty-cell" colspan="5">No hay usuarios disponibles desde la API.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="report-source-heading">
+      <span class="section-kicker">Fuente 02</span>
+      <h3>Reporte desde JSON local</h3>
+      <p>Archivo src/assets/datos.json consultado con Angular HttpClient.</p>
+    </div>
+
+    <div class="table-card compact-table">
+      <div class="table-heading">
+        <div>
+          <h3>Reporte desde JSON local</h3>
+          <p>{{ datosLocales.length }} registros desde assets/datos.json</p>
+        </div>
+        <span class="count-badge">{{ datosLocales.length }}</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Tipo Gasto</th>
+              <th>RUC</th>
+              <th>Valor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let dato of datosLocales">
+              <td class="cell-primary">{{ dato.id }}</td>
+              <td><span class="type-badge" [ngClass]="'type-' + dato.tipo">{{ getTipoLabel(dato.tipo) }}</span></td>
+              <td>{{ dato.ruc }}</td>
+              <td class="money-cell">{{ dato.valor | currency: 'USD' }}</td>
+            </tr>
+            <tr *ngIf="!loadingApi && datosLocales.length === 0">
+              <td class="empty-cell" colspan="4">No hay datos locales disponibles.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="report-source-heading">
+      <span class="section-kicker">Fuente 03</span>
+      <h3>Usuarios desde JSON externo</h3>
+      <p>Usuarios consultados desde JSONPlaceholder como fuente HTTP externa.</p>
+    </div>
+
+    <div class="table-card compact-table">
+      <div class="table-heading">
+        <div>
+          <h3>Usuarios desde JSON externo</h3>
+          <p>Datos consumidos desde https://jsonplaceholder.typicode.com/users.</p>
+        </div>
+        <span class="count-badge">{{ usuariosExternos.length }}</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Nombre</th>
+              <th>Usuario/Login</th>
+              <th>Correo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let usuario of usuariosExternos">
+              <td class="cell-primary">{{ usuario.id }}</td>
+              <td>{{ usuario.name }}</td>
+              <td>{{ usuario.username }}</td>
+              <td><a class="email-link" [href]="'mailto:' + usuario.email">{{ usuario.email }}</a></td>
+            </tr>
+            <tr *ngIf="!loadingApi && usuariosExternos.length === 0">
+              <td class="empty-cell" colspan="4">No hay usuarios externos disponibles.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</div>

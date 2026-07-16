@@ -1,0 +1,120 @@
+<div class="view-stack">
+  <section class="section-heading">
+    <div>
+      <span class="section-kicker">Documentación</span>
+      <h2>Información técnica del sistema</h2>
+    </div>
+    <p>Evidencia visual de cumplimiento de las prácticas Angular.</p>
+  </section>
+
+  <section class="info-hero panel">
+    <span class="info-hero-icon">A</span>
+    <div>
+      <span class="section-kicker">GastosDB</span>
+      <h3>Aplicación Angular SPA conectada a AWS</h3>
+      <p>
+        Frontend desarrollado con Angular, RouterModule, FormsModule y HttpClient para consumir una API REST de
+        Node.js + Express desplegada en AWS EC2 con persistencia en MongoDB Atlas.
+      </p>
+    </div>
+  </section>
+
+  <section class="tech-grid">
+    <article class="tech-card">
+      <span>01</span>
+      <h4>SPA</h4>
+      <strong>Angular</strong>
+      <p>Una sola aplicación principal renderiza vistas mediante componentes y router-outlet.</p>
+    </article>
+    <article class="tech-card">
+      <span>02</span>
+      <h4>Routing</h4>
+      <strong>RouterModule</strong>
+      <p>Las rutas usan routerLink, routerLinkActive y navegación sin recargar la página.</p>
+    </article>
+    <article class="tech-card">
+      <span>03</span>
+      <h4>Formularios</h4>
+      <strong>FormsModule + ngModel</strong>
+      <p>Los formularios de gastos y usuarios enlazan datos y validan entradas.</p>
+    </article>
+    <article class="tech-card">
+      <span>04</span>
+      <h4>HTTP</h4>
+      <strong>HttpClient</strong>
+      <p>Los servicios consumen API REST, JSON local y JSONPlaceholder.</p>
+    </article>
+  </section>
+
+  <section class="practice-compliance panel">
+    <div class="panel-heading">
+      <span class="panel-icon">✓</span>
+      <div>
+        <span class="section-kicker">Evidencia académica</span>
+        <h3>Cumplimiento de prácticas</h3>
+      </div>
+    </div>
+    <div class="practice-grid">
+      <article class="practice-card">
+        <span class="practice-code">PW2.9.1</span>
+        <h4>Formulario</h4>
+        <ul>
+          <li>Se implementaron formularios Angular para registrar y editar gastos.</li>
+          <li>Se implementaron formularios Angular para registrar y editar usuarios.</li>
+          <li>Se usa FormsModule y enlace bidireccional con ngModel.</li>
+          <li>Los datos se reflejan en la tabla después de crear o actualizar.</li>
+        </ul>
+      </article>
+
+      <article class="practice-card">
+        <span class="practice-code">PW2.10</span>
+        <h4>Routing</h4>
+        <ul>
+          <li>Se implementó una SPA con Angular RouterModule.</li>
+          <li>
+            Se crearon rutas reales: <code>/dashboard</code>, <code>/gastos</code>, <code>/usuarios</code>,
+            <code>/reporte</code>, <code>/informacion</code> y <code>/contacto</code>.
+          </li>
+          <li>El menú lateral usa routerLink y routerLinkActive.</li>
+          <li>La vista se renderiza en router-outlet.</li>
+        </ul>
+      </article>
+
+      <article class="practice-card">
+        <span class="practice-code">PW2.11</span>
+        <h4>HttpClient</h4>
+        <ul>
+          <li>Se usa Angular HttpClient como cliente HTTP oficial.</li>
+          <li>Se consumen endpoints REST del backend en AWS EC2.</li>
+          <li>Se implementaron métodos GET, POST, PUT y DELETE.</li>
+          <li>El reporte carga datos desde la API REST, assets/datos.json y JSONPlaceholder.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel sync-panel">
+    <div class="panel-heading">
+      <span class="panel-icon">HTTP</span>
+      <div>
+        <span class="section-kicker">Flujo de datos</span>
+        <h3>API REST + MongoDB Atlas + AWS EC2</h3>
+      </div>
+    </div>
+    <p>
+      Angular consume el mismo backend que Postman. Las operaciones GET, POST, PUT y DELETE llegan a la API REST,
+      el backend procesa los datos y MongoDB Atlas conserva la información.
+    </p>
+    <div class="endpoint-list">
+      <code>GET /misitio/health</code>
+      <code>GET /misitio/gastos</code>
+      <code>POST /misitio/gastos</code>
+      <code>PUT /misitio/gastos/:id</code>
+      <code>DELETE /misitio/gastos/:id</code>
+      <code>GET /misitio/usuarios</code>
+      <code>POST /misitio/usuarios</code>
+      <code>PUT /misitio/usuarios/:id</code>
+      <code>DELETE /misitio/usuarios/:id</code>
+    </div>
+  </section>
+</div>

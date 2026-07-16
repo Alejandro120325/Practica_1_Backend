@@ -1,0 +1,140 @@
+<div class="view-stack">
+  <section class="section-heading">
+    <div>
+      <span class="section-kicker">PW2.9.1 Formulario</span>
+      <h2>Formulario y CRUD de gastos</h2>
+    </div>
+    <p>Usa FormsModule, ngModel, HttpClient y métodos GET, POST, PUT y DELETE.</p>
+  </section>
+
+  <div class="alert-error" *ngIf="error">{{ error }}</div>
+  <div class="toast-inline" [class.toast-error]="mensajeTipo === 'error'" *ngIf="mensaje">{{ mensaje }}</div>
+
+  <section class="content-layout">
+    <form class="form-card" (ngSubmit)="guardarGasto()" #gastoForm="ngForm" novalidate>
+      <div class="card-heading">
+        <div>
+          <span class="form-step">01</span>
+          <div>
+            <h3>{{ editandoId ? 'Editar gasto' : 'Nuevo gasto' }}</h3>
+            <p>Formulario Angular con enlace bidireccional usando ngModel.</p>
+          </div>
+        </div>
+        <span class="editing-badge" *ngIf="editandoId">Editando</span>
+      </div>
+
+      <div class="field">
+        <label for="cedula">Cédula <b>*</b></label>
+        <input id="cedula" name="cedula" [(ngModel)]="form.cedula" placeholder="Ej. 0102030405" />
+        <small class="field-error" *ngIf="errores['cedula']">{{ errores['cedula'] }}</small>
+      </div>
+
+      <div class="field">
+        <label for="tipo">Tipo de gasto <b>*</b></label>
+        <select id="tipo" name="tipo" [(ngModel)]="form.tipo">
+          <option *ngFor="let tipo of tipoOptions" [value]="tipo">{{ getTipoLabel(tipo) }}</option>
+        </select>
+        <small class="field-error" *ngIf="errores['tipo']">{{ errores['tipo'] }}</small>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label for="monto">Monto <b>*</b></label>
+          <div class="input-prefix">
+            <span>$</span>
+            <input id="monto" name="monto" type="number" min="0.01" step="0.01" [(ngModel)]="form.monto" />
+          </div>
+          <small class="field-error" *ngIf="errores['monto']">{{ errores['monto'] }}</small>
+        </div>
+
+        <div class="field">
+          <label for="montoMaximoDeducible">Máximo deducible</label>
+          <div class="input-prefix">
+            <span>$</span>
+            <input
+              id="montoMaximoDeducible"
+              name="montoMaximoDeducible"
+              type="number"
+              min="0"
+              step="0.01"
+              [(ngModel)]="form.montoMaximoDeducible"
+            />
+          </div>
+          <small class="field-error" *ngIf="errores['montoMaximoDeducible']">{{ errores['montoMaximoDeducible'] }}</small>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="informacion">Información adicional</label>
+        <textarea id="informacion" name="informacion" rows="3" [(ngModel)]="form.informacion"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="periodo">Periodo fiscal <b>*</b></label>
+        <input id="periodo" name="periodo" type="number" min="2000" max="2100" [(ngModel)]="form.periodo" />
+        <small class="field-error" *ngIf="errores['periodo']">{{ errores['periodo'] }}</small>
+      </div>
+
+      <div class="form-actions">
+        <button class="button button-primary" type="submit" [disabled]="guardando">
+          {{ guardando ? 'Guardando...' : editandoId ? 'Guardar cambios' : 'Crear gasto' }}
+        </button>
+        <button class="button button-secondary" type="button" *ngIf="editandoId" (click)="cancelarEdicion()">Cancelar edición</button>
+      </div>
+    </form>
+
+    <div class="table-card">
+      <div class="table-heading">
+        <div>
+          <h3>Gastos registrados</h3>
+          <p>{{ loading ? 'Cargando datos...' : gastos.length + ' registros desde la API' }}</p>
+        </div>
+        <span class="count-badge">{{ gastos.length }}</span>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Cédula</th>
+              <th>Tipo</th>
+              <th>Monto</th>
+              <th>Máximo deducible</th>
+              <th>Información</th>
+              <th>Periodo</th>
+              <th>Creado</th>
+              <th>Actualizado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let gasto of gastos" [class.row-highlight]="resaltadoId === gasto._id">
+              <td class="cell-primary">{{ gasto.cedula }}</td>
+              <td><span class="type-badge" [ngClass]="'type-' + gasto.tipo">{{ getTipoLabel(gasto.tipo) }}</span></td>
+              <td class="money-cell">{{ gasto.monto | currency: 'USD' }}</td>
+              <td>{{ gasto.montoMaximoDeducible | currency: 'USD' }}</td>
+              <td class="info-cell">{{ gasto.informacion || '—' }}</td>
+              <td>{{ gasto.periodo || '—' }}</td>
+              <td class="date-cell">{{ gasto.createdAt ? (gasto.createdAt | date: 'medium') : '—' }}</td>
+              <td class="date-cell">{{ gasto.updatedAt ? (gasto.updatedAt | date: 'medium') : '—' }}</td>
+              <td>
+                <div class="actions">
+                  <button class="icon-button edit-button" type="button" (click)="editarGasto(gasto)">Editar</button>
+                  <button class="icon-button delete-button" type="button" (click)="eliminarGasto(gasto)" [disabled]="eliminandoId === gasto._id">
+                    {{ eliminandoId === gasto._id ? '...' : 'Eliminar' }}
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="!loading && gastos.length === 0">
+              <td class="empty-cell" colspan="9">No hay gastos registrados.</td>
+            </tr>
+            <tr *ngIf="loading">
+              <td class="empty-cell" colspan="9">Cargando datos...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</div>

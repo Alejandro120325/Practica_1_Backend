@@ -1,0 +1,125 @@
+<div class="view-stack">
+  <section class="section-heading">
+    <div>
+      <span class="section-kicker">PW2.9.1 Formulario</span>
+      <h2>Formulario y CRUD de usuarios</h2>
+    </div>
+    <p>Registro, edición y eliminación con FormsModule, ngModel y HttpClient.</p>
+  </section>
+
+  <div class="alert-error" *ngIf="error">{{ error }}</div>
+  <div class="toast-inline" [class.toast-error]="mensajeTipo === 'error'" *ngIf="mensaje">{{ mensaje }}</div>
+
+  <section class="content-layout">
+    <form class="form-card" (ngSubmit)="guardarUsuario()" #usuarioForm="ngForm" novalidate>
+      <div class="card-heading">
+        <div>
+          <span class="form-step">01</span>
+          <div>
+            <h3>{{ editandoId ? 'Editar usuario' : 'Nuevo usuario' }}</h3>
+            <p>Formulario Angular con ngModel para reflejar cambios en tiempo real.</p>
+          </div>
+        </div>
+        <span class="editing-badge" *ngIf="editandoId">Editando</span>
+      </div>
+
+      <div class="field">
+        <label for="nombre">Nombre completo <b>*</b></label>
+        <input id="nombre" name="nombre" [(ngModel)]="form.nombre" placeholder="Ej. María Andrade" />
+        <small class="field-error" *ngIf="errores['nombre']">{{ errores['nombre'] }}</small>
+      </div>
+
+      <div class="field">
+        <label for="cedula">Cédula <b>*</b></label>
+        <input id="cedula" name="cedula" [(ngModel)]="form.cedula" placeholder="Ej. 0102030405" />
+        <small class="field-error" *ngIf="errores['cedula']">{{ errores['cedula'] }}</small>
+      </div>
+
+      <div class="field">
+        <label for="email">Correo electrónico <b>*</b></label>
+        <input id="email" name="email" type="email" [(ngModel)]="form.email" placeholder="nombre@correo.com" />
+        <small class="field-error" *ngIf="errores['email']">{{ errores['email'] }}</small>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label for="periodo">Periodo <b>*</b></label>
+          <input id="periodo" name="periodo" type="number" min="2000" max="2100" [(ngModel)]="form.periodo" />
+          <small class="field-error" *ngIf="errores['periodo']">{{ errores['periodo'] }}</small>
+        </div>
+
+        <div class="field">
+          <label for="ingresos">Ingresos <b>*</b></label>
+          <div class="input-prefix">
+            <span>$</span>
+            <input id="ingresos" name="ingresos" type="number" min="0" step="0.01" [(ngModel)]="form.ingresos" />
+          </div>
+          <small class="field-error" *ngIf="errores['ingresos']">{{ errores['ingresos'] }}</small>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="button button-primary" type="submit" [disabled]="guardando">
+          {{ guardando ? 'Guardando...' : editandoId ? 'Guardar cambios' : 'Crear usuario' }}
+        </button>
+        <button class="button button-secondary" type="button" *ngIf="editandoId" (click)="cancelarEdicion()">Cancelar edición</button>
+      </div>
+    </form>
+
+    <div class="table-card">
+      <div class="table-heading">
+        <div>
+          <h3>Usuarios registrados</h3>
+          <p>{{ loading ? 'Cargando datos...' : usuarios.length + ' registros desde la API' }}</p>
+        </div>
+        <span class="count-badge">{{ usuarios.length }}</span>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Cédula</th>
+              <th>Email</th>
+              <th>Periodo</th>
+              <th>Ingresos</th>
+              <th>Total gastos</th>
+              <th>Base imponible</th>
+              <th>Creado</th>
+              <th>Actualizado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let usuario of usuarios" [class.row-highlight]="resaltadoId === usuario._id">
+              <td class="cell-primary">{{ usuario.nombre }}</td>
+              <td>{{ usuario.cedula }}</td>
+              <td><a class="email-link" [href]="'mailto:' + usuario.email">{{ usuario.email }}</a></td>
+              <td>{{ usuario.periodo || '—' }}</td>
+              <td class="money-cell">{{ usuario.ingresos | currency: 'USD' }}</td>
+              <td class="money-cell">{{ usuario.totalGastos !== undefined ? (usuario.totalGastos | currency: 'USD') : '—' }}</td>
+              <td class="money-cell">{{ usuario.baseImponible !== undefined ? (usuario.baseImponible | currency: 'USD') : '—' }}</td>
+              <td class="date-cell">{{ usuario.createdAt ? (usuario.createdAt | date: 'medium') : '—' }}</td>
+              <td class="date-cell">{{ usuario.updatedAt ? (usuario.updatedAt | date: 'medium') : '—' }}</td>
+              <td>
+                <div class="actions">
+                  <button class="icon-button edit-button" type="button" (click)="editarUsuario(usuario)">Editar</button>
+                  <button class="icon-button delete-button" type="button" (click)="eliminarUsuario(usuario)" [disabled]="eliminandoId === usuario._id">
+                    {{ eliminandoId === usuario._id ? '...' : 'Eliminar' }}
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="!loading && usuarios.length === 0">
+              <td class="empty-cell" colspan="10">No hay usuarios registrados.</td>
+            </tr>
+            <tr *ngIf="loading">
+              <td class="empty-cell" colspan="10">Cargando datos...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</div>

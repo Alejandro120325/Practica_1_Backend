@@ -1,0 +1,25 @@
+<div class="app-shell">
+  <app-menu
+    [backendMessage]="backendMessage"
+    [backendOnline]="backendOnline"
+    [connectionLabel]="connectionLabel"
+  ></app-menu>
+
+  <main class="main-content">
+    <header class="page-header">
+      <div>
+        <div class="eyebrow">
+          <span class="eyebrow-dot"></span>
+          {{ environmentLabel }}
+        </div>
+        <h1>{{ pageTitle }}</h1>
+        <p>{{ pageDescription }}</p>
+      </div>
+      <button class="button button-primary refresh-button" type="button" (click)="verificarBackend()">
+        Actualizar estado
+      </button>
+    </header>
+
+    <router-outlet></router-outlet>
+  </main>
+</div>

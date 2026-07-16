@@ -1,0 +1,33 @@
+<aside class="sidebar">
+  <div>
+    <div class="brand">
+      <div class="brand-logo">G</div>
+      <div>
+        <h2>GastosDB</h2>
+        <p>Angular SPA</p>
+      </div>
+    </div>
+
+    <p class="nav-label">Navegación</p>
+    <nav aria-label="Navegación principal">
+      <a
+        *ngFor="let item of menuItems"
+        [routerLink]="item.path"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: item.exact || false }"
+      >
+        <span class="nav-icon">{{ item.icon }}</span>
+        {{ item.label }}
+      </a>
+    </nav>
+  </div>
+
+  <div class="server-status" [class.offline]="backendOnline === false">
+    <div class="status-heading">
+      <span class="status-dot"></span>
+      <span>Estado del backend</span>
+    </div>
+    <strong>{{ backendMessage }}</strong>
+    <small>{{ connectionLabel }}</small>
+  </div>
+</aside>
